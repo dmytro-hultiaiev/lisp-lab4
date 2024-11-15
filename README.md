@@ -92,12 +92,13 @@ CL-USER> (mapcar (propagator-fn :comparator #'<) '(1 2 3))
 ## Лістинг реалізації другої частини завдання
 ```lisp
 (defun propagator-fn (&key (comparator #'>))
-  (let ((prev nil))  
+  (let ((prev :uninitialized))  
     (lambda (x)
-      (if (or (null prev) (funcall comparator x prev))  
+      (if (eq prev :uninitialized)  
+          (setq prev x))
+      (if (funcall comparator x prev)  
           (setq prev x)  
-          (setq x prev))  
-      x)))  
+          (setq x prev)))))   
 ```
 ### Тестові набори та утиліти
 ```lisp
