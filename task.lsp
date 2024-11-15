@@ -34,12 +34,13 @@
 
 
 (defun propagator-fn (&key (comparator #'>))
-  (let ((prev nil))  
+  (let ((prev :uninitialized))  
     (lambda (x)
-      (if (or (null prev) (funcall comparator x prev))  
+      (if (eq prev :uninitialized)  
+          (setq prev x))
+      (if (funcall comparator x prev)  
           (setq prev x)  
-          (setq x prev))  
-      x)))  
+          (setq x prev)))))  
 
 (defun check-second-function (name input expected)
     "Execute `my-reverse' on `input', compare result with `expected' and print
